@@ -48,7 +48,7 @@ export async function evaluateRole(
     if (digests.some((digest) => !digest) || digests[0] === digests[1]) return { insufficient: [tasks[1].skill] };
   }
 
-  return withAIProvider(24000, async (context) => {
+  return withAIProvider(45000, async (context) => {
     const requestedModel = assessmentModel(context.provider, tasks.some((task) => task.mode === "image"));
     const settled = await Promise.allSettled(submissions.map(async ({ task, answer, attachment }, index) => {
       let source = answer.text.trim();
@@ -116,7 +116,7 @@ type CriterionEvidence = {
 };
 
 export function scoreHistoricalEvidence(role: RoleTrack, evidence: Omit<CriterionEvidence, "roleName">) {
-  return withAIProvider(24000, (context) => gradeCriterion(context, {
+  return withAIProvider(45000, (context) => gradeCriterion(context, {
     ...evidence, roleName: role.name, model: assessmentModel(context.provider, role.tasks.some((task) => task.mode === "image")),
   }));
 }

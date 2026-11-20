@@ -80,7 +80,7 @@ export async function evaluateWorkspace(record: WorkspaceRecord, roleName: strin
   }));
   if (duplicates) return { score: null, feedback: [{ question: 6, skill: "Revision evidence", rating: null, evidence: "", feedback: "Upload a distinct revision so the change can be assessed." }] as WorkspaceFeedback[] };
 
-  return withAIProvider(23000, async (context) => {
+  return withAIProvider(45000, async (context) => {
     if (media.length && context.provider === "groq") {
       return { score: null, feedback: [{ question: 6, skill: "Media review", rating: null, evidence: "", feedback: "The primary media evaluator is temporarily unavailable. Your work is saved for retry." }] as WorkspaceFeedback[] };
     }

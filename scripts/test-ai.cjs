@@ -12,7 +12,7 @@ require.extensions[".ts"] = (module, filename) => {
   module._compile(outputText, filename);
 };
 
-const { assessmentModel, structuredAI, transcribeAI, withAIProvider } = require("../lib/ai/providers.ts");
+const { assessmentModel, resetVertexTokenCache, structuredAI, transcribeAI, withAIProvider } = require("../lib/ai/providers.ts");
 const { reflect } = require("../lib/ai/mirror.ts");
 const check = { name: "check", schema: z.object({ ready: z.boolean() }), system: "Return JSON", text: "Synthetic input" };
 const generate = () => withAIProvider(1000, (context) => structuredAI(context, { ...check, model: assessmentModel(context.provider) }));
@@ -27,8 +27,9 @@ const groq = (output) => Response.json({
 });
 
 beforeEach(() => {
+  resetVertexTokenCache();
   for (const key of Object.keys(process.env)) {
-    if (/^(IMPRINT_(AI|GEMINI|GROQ)_|GEMINI_API_KEY$|GROQ_API_KEY$)/.test(key)) delete process.env[key];
+    if (/^(IMPRINT_(AI|VERTEX|GEMMA|GEMINI|GROQ)_|GEMINI_API_KEY$|GROQ_API_KEY$)/.test(key)) delete process.env[key];
   }
   Object.assign(process.env, { GEMINI_API_KEY: "fixture-gemini", GROQ_API_KEY: "fixture-groq", IMPRINT_AI_ENABLED: "true" });
 });
@@ -121,4 +122,83 @@ test("Mirror repeats screening on fallback before sending recent dialogue", asyn
   const result = await reflect({ message: "Synthetic reflection.", history: [], topic: "Planning", mode: "question" });
   assert.equal(result.kind, "safety");
   assert.deepEqual(calls, ["gemini-screen", "gemini-question", "mirror_safety"]);
+});
+
+test("Vertex AI is Tier 1 primary when configured and falls back on 403/billing-close through Gemma 4 to Free Gemini", async (t) => {
+  process.env.IMPRINT_VERTEX_PROJECT = "imprint-hackathon-2026";
+  delete process.env.GROQ_API_KEY;
+  const calls = [];
+  t.mock.method(global, "fetch", async (url, options) => {
+    if (url.startsWith("http://metadata.google.internal/")) {
+      assert.equal(options.headers["Metadata-Flavor"], "Google");
+      calls.push("metadata-token");
+      return Response.json({ access_token: "vertex-token", expires_in: 3600 });
+    }
+    if (url.includes("aiplatform.googleapis.com")) {
+      assert.match(url, /\/locations\/global\/publishers\/google\/models\/gemini-3\.1-pro-preview:generateContent$/);
+      assert.equal(options.headers.Authorization, "Bearer vertex-token");
+      calls.push("vertex");
+      return new Response(null, { status: 403 });
+    }
+    if (url.includes("gemma-4-26b-a4b-it")) {
+      calls.push("gemma");
+      return new Response(null, { status: 429 });
+    }
+    if (url.includes("gemini-3.5-flash-lite")) {
+      calls.push("gemini-free");
+      return gemini({ ready: true }, { modelVersion: "gemini-3.5-flash-lite" });
+    }
+    throw new Error(`Unexpected URL: ${url}`);
+  });
+  const result = await generate();
+  assert.deepEqual(result, { data: { ready: true }, provider: "gemini", model: "gemini-3.5-flash-lite" });
+  assert.deepEqual(calls, ["metadata-token", "vertex", "gemma", "gemini-free"]);
+});
+
+test("Gemma 4 skips audio transcription and routes cleanly to Free Gemini Flash-Lite", async (t) => {
+  process.env.IMPRINT_VERTEX_PROJECT = "imprint-hackathon-2026";
+  delete process.env.GROQ_API_KEY;
+  const calls = [];
+  t.mock.method(global, "fetch", async (url) => {
+    if (url.startsWith("http://metadata.google.internal/")) {
+      return Response.json({ access_token: "vertex-token", expires_in: 3600 });
+    }
+    if (url.includes("aiplatform.googleapis.com")) {
+      calls.push("vertex-audio");
+      return new Response(null, { status: 403 });
+    }
+    if (url.includes("gemma")) {
+      throw new Error("Gemma should be skipped for audio transcription");
+    }
+    calls.push("gemini-free-audio");
+    return gemini({ text: "Spoken test" }, { modelVersion: "gemini-3.5-flash-lite" });
+  });
+  const transcript = await withAIProvider(1000, (context) =>
+    transcribeAI(context, new Blob(["audio bytes"], { type: "audio/webm" }), "note.webm")
+  );
+  assert.deepEqual(transcript, { data: { text: "Spoken test" }, provider: "gemini", model: "gemini-3.5-flash-lite" });
+  assert.deepEqual(calls, ["vertex-audio", "gemini-free-audio"]);
+});
+
+test("Mirror actively runs Gemma 4 safety screening alongside Vertex AI Gemini 3.5 Flash reflection", async (t) => {
+  process.env.IMPRINT_VERTEX_PROJECT = "imprint-hackathon-2026";
+  delete process.env.GROQ_API_KEY;
+  const calls = [];
+  t.mock.method(global, "fetch", async (url) => {
+    if (url.startsWith("http://metadata.google.internal/")) {
+      return Response.json({ access_token: "vertex-token", expires_in: 3600 });
+    }
+    if (url.includes("gemma-4-26b-a4b-it")) {
+      calls.push("gemma-safety");
+      return gemini({ urgent: false }, { modelVersion: "gemma-4-26b-a4b-it" });
+    }
+    if (url.includes("aiplatform.googleapis.com") && url.includes("gemini-3.5-flash")) {
+      calls.push("vertex-mirror");
+      return gemini({ kind: "question", text: "What tradeoff feels most important here?" }, { modelVersion: "gemini-3.5-flash" });
+    }
+    throw new Error(`Unexpected URL: ${url}`);
+  });
+  const result = await reflect({ message: "I want to decide on my own.", history: [], topic: "Planning", mode: "question" });
+  assert.deepEqual(result, { response: "What tradeoff feels most important here?", kind: "question" });
+  assert.deepEqual(calls, ["gemma-safety", "vertex-mirror"]);
 });

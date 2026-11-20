@@ -312,7 +312,7 @@ export default function MirrorClient({ userData, aiEnabled, workQuestion }: Mirr
                       Begin Session →
                     </motion.button>
                     <p className="max-w-md text-center text-xs text-white/70">
-                      Mirror sends recent messages to Google Gemini for safety checks and reflection. Groq handles the request if Gemini is unavailable. You can skip any question or end the session.
+                      Mirror sends recent messages to Google AI (Gemma for safety checks and Vertex AI Gemini for reflection, with Google AI Studio fallback). You can skip any question or end the session.
                     </p>
                   </div>
                 )}

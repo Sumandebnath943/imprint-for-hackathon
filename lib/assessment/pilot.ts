@@ -1,5 +1,6 @@
 import "server-only";
 import { isAIEnabled } from "@/lib/ai/config";
+import { isAnyAIConfigured } from "@/lib/ai/providers";
 import type { ScoringAvailability } from "./availability";
 import { isCodeRunnerConfigured } from "./code-checks";
 
@@ -14,7 +15,7 @@ export function isRoleScoringEnabled(roleId: string) {
 export function getScoringAvailability(roleId: string): ScoringAvailability {
   if (!isAIEnabled() || !isRolePilotEnabled(roleId)) return "disabled";
   if (roleId === "software-developer" && !isCodeRunnerConfigured()) return "unavailable";
-  return process.env.GEMINI_API_KEY?.trim() ? "enabled" : "unavailable";
+  return isAnyAIConfigured() ? "enabled" : "unavailable";
 }
 
 export function reviewerAllowed(id: string) {

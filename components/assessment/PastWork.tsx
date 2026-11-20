@@ -62,7 +62,7 @@ export default function PastWork({ roleId, criteria, samples, scoringEnabled }: 
           <div className="flex flex-wrap gap-3">
             {scoringEnabled && sample.status === "pending" && sample.consent_version !== ASSESSMENT_CONSENT_VERSION && (
               <button type="button" disabled={busy} className="text-sm text-[#ff9c77] underline" onClick={() => {
-                if (window.confirm("May Google Gemini, or Groq if Gemini is unavailable, score this sample after independent review?")) {
+                if (window.confirm("May Google AI (Vertex AI Gemini and Gemma) score this sample after independent review?")) {
                   void request("PATCH", JSON.stringify({ id: sample.id, consent: true, consentVersion: ASSESSMENT_CONSENT_VERSION }));
                 }
               }}>Renew scoring permission</button>
@@ -92,7 +92,7 @@ export default function PastWork({ roleId, criteria, samples, scoringEnabled }: 
         {!isImage && <label className="block">Or enter a work excerpt<textarea className={field} name="content" rows={5} maxLength={10000} /></label>}
         <label className="flex items-start gap-2.5 leading-relaxed cursor-pointer">
           <input type="checkbox" name="consent" value="yes" required className="mt-1 h-4 w-4 shrink-0 accent-[#FF5500]" />
-          <span>I agree to independent provenance review and to sending qualifying work to Google Gemini for rubric scoring, with Groq as a fallback.</span>
+          <span>I agree to independent provenance review and to sending qualifying work to Google AI (Vertex AI Gemini and Gemma) for rubric scoring.</span>
         </label>
         <button type="submit" disabled={!hydrated || busy} className="min-h-10 rounded-full bg-[#ff713d] px-4 py-2 font-semibold text-black disabled:opacity-50">Submit sample</button>
       </form>}

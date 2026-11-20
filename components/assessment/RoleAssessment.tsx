@@ -159,7 +159,7 @@ export default function RoleAssessment({ roleName }: { roleName: string }) {
           <p className="text-sm text-white/70">Use your own judgment and abilities. Follow the task’s material and tool instructions. Use fictional or provided information only.</p>
           <label className="flex items-start gap-3 text-sm">
             <input className="mt-1" type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} />
-            <span>I agree to have my assessment responses and submitted media processed by Google Gemini or its fallback, Groq, for scoring or transcription. <Link className="underline" href="/privacy" target="_blank">Privacy details</Link></span>
+            <span>I agree to have my assessment responses and submitted media processed by Google AI (Vertex AI Gemini and Gemma, with Google AI Studio fallback) for scoring or transcription. <Link className="underline" href="/privacy" target="_blank">Privacy details</Link></span>
           </label>
           <button className={button} disabled={!consent || !!busy} onClick={start}>Begin assessment</button>
         </div>

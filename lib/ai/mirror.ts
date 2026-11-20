@@ -1,6 +1,6 @@
 import "server-only";
 import { z } from "zod";
-import { AIProviderError, mirrorModel, safetyModel, structuredAI, withAIProvider } from "./providers";
+import { AIProviderError, activeGemmaSafetyContext, mirrorModel, safetyModel, structuredAI, withAIProvider } from "./providers";
 
 const screening = z.object({ urgent: z.boolean() });
 const reply = z.object({ kind: z.enum(["question", "summary", "safety"]), text: z.string().max(800) });
@@ -26,10 +26,40 @@ export async function reflect({ message, history, topic, mode }: {
 }) {
   const latest = message.trim() || history.filter((item) => item.role === "user").at(-1)?.content;
   try {
-    return await withAIProvider(12000, async (context) => {
+    return await withAIProvider(18000, async (context) => {
       if (latest) {
-        const safety = await structuredAI(context, { model: safetyModel(context.provider), name: "mirror_safety", schema: screening,
-          system: screenPrompt, text: JSON.stringify({ message: latest }) });
+        // When Vertex AI is primary and Gemma 4 is enabled, actively run safety screening
+        // on Gemma 4 first and fall back to the active provider if Gemma is unavailable.
+        let safety;
+        const gemmaCtx = context.provider === "vertex" ? activeGemmaSafetyContext(context.signal) : null;
+        if (gemmaCtx) {
+          try {
+            safety = await structuredAI(gemmaCtx, {
+              model: safetyModel("gemma"),
+              name: "mirror_safety",
+              schema: screening,
+              system: screenPrompt,
+              text: JSON.stringify({ message: latest }),
+            });
+          } catch (error) {
+            if (error instanceof AIProviderError && error.kind === "blocked") throw error;
+            safety = await structuredAI(context, {
+              model: safetyModel(context.provider),
+              name: "mirror_safety",
+              schema: screening,
+              system: screenPrompt,
+              text: JSON.stringify({ message: latest }),
+            });
+          }
+        } else {
+          safety = await structuredAI(context, {
+            model: safetyModel(context.provider),
+            name: "mirror_safety",
+            schema: screening,
+            system: screenPrompt,
+            text: JSON.stringify({ message: latest }),
+          });
+        }
         if (safety.data.urgent) return { response: emergencyMessage, kind: "safety" as const };
       }
       const { data } = await structuredAI(context, {

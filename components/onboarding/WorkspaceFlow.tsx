@@ -170,7 +170,7 @@ export function WorkspaceScoring({ initial, onChange, onBusy, onboarding = false
     {complete && !workspace.assessment_id && view.scoring && <div className="space-y-3.5">
       <label className="flex items-start gap-3 text-sm leading-relaxed text-white/85 cursor-pointer">
         <input type="checkbox" className="mt-1 h-4 w-4 shrink-0 accent-[#FF5500]" checked={consent} onChange={(event) => setConsent(event.target.checked)} />
-        <span>I consent to sending my profession work samples to Gemini, with Groq as a fallback where supported.</span>
+        <span>I consent to sending my profession work samples to Google AI (Vertex AI Gemini and Gemma, with Google AI Studio fallback).</span>
       </label>
       {onboarding && <label className="flex items-start gap-3 text-sm leading-relaxed text-white/85 cursor-pointer">
         <input type="checkbox" className="mt-1 h-4 w-4 shrink-0 accent-[#FF5500]" checked={share} onChange={(event) => setShare(event.target.checked)} />
