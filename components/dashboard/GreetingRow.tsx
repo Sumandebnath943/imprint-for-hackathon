@@ -1,0 +1,75 @@
+"use client";
+
+import { motion } from "framer-motion";
+import type { DashboardProfile } from "@/lib/dashboard/types";
+import { getGreeting, getFirstName } from "@/lib/dashboard/types";
+import { Flame } from "lucide-react";
+import { CLUSTER_LABELS } from "@/lib/onboarding/modules";
+import { useHydrated } from "@/hooks/useHydrated";
+
+interface GreetingRowProps {
+  profile: DashboardProfile | null;
+  streak: number;
+}
+
+export default function GreetingRow({ profile, streak }: GreetingRowProps) {
+  const hydrated = useHydrated();
+  const dateStr = hydrated ? new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) : "";
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      // Wraps on narrow screens: the date + streak block ran ~33px past the
+      // right edge when forced onto one line with the greeting on a phone.
+      className="flex flex-wrap items-start justify-between gap-y-3 pb-8"
+    >
+      {/* Left */}
+      <div>
+        <p className="text-base mb-1" style={{ color: "rgba(255,255,255,0.72)", fontFamily: "Space Grotesk, sans-serif" }}>
+          {hydrated ? getGreeting() : "Welcome"},
+        </p>
+        <h2
+          className="font-bold text-white mb-3"
+          style={{ fontSize: "clamp(32px,4vw,48px)", lineHeight: 1, fontFamily: "Space Grotesk, sans-serif" }}
+        >
+          {getFirstName(profile?.full_name ?? null)}.
+        </h2>
+        {profile?.profession && (
+          <span
+            className="inline-flex items-center rounded-full text-sm font-medium"
+            style={{
+              background: "rgba(255,85,0,0.10)",
+              border: "1px solid rgba(255,85,0,0.25)",
+              padding: "6px 14px",
+              color: "#FF5500",
+              fontSize: 13,
+              fontFamily: "Space Grotesk, sans-serif",
+            }}
+          >
+            {profile.profession}
+            {profile.profession_cluster
+              ? ` · ${CLUSTER_LABELS[profile.profession_cluster] ?? profile.profession_cluster}`
+              : ""}
+          </span>
+        )}
+      </div>
+
+      {/* Right */}
+      <div className="text-left sm:text-right w-full sm:w-auto">
+        <p className="text-sm mb-2" style={{ color: "rgba(255,255,255,0.66)" }}>{dateStr}</p>
+        {streak > 0 ? (
+          <div className="flex items-center justify-start sm:justify-end gap-1.5">
+            <Flame size={16} style={{ color: "#FF5500" }} />
+            <span className="font-semibold text-sm" style={{ color: "#FF5500", fontFamily: "Space Grotesk, sans-serif" }}>
+              {streak} day streak
+            </span>
+          </div>
+        ) : (
+          <p className="text-sm" style={{ color: "rgba(255,255,255,0.62)" }}>Start your streak today</p>
+        )}
+      </div>
+    </motion.div>
+  );
+}

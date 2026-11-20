@@ -1,0 +1,54 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# editor workspace
+*.code-workspace
+
+# local scratch / one-off scripts
+/scripts/local-*
+
+# local agent/editor tooling
+.claude/
+
+# local media working folders (voiceover, music, renders, submission bundles)
+/video-bgm/
+/video-vos/
+/video-out/
+/hackathon-files/
+
+# Internal documentation. Project bible, developer and portfolio handoffs and
+# the beacon write-up are working material — planning, positioning and
+# operational detail that does not belong on a public repository page. The
+# README is the repo's public documentation; anything else here stays local.
+/docs/

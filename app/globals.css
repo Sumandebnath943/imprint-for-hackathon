@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.onboarding-shell :is(button, a, input, textarea, summary):focus-visible {
+  outline: 2px solid #ff955f;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-shell *, .onboarding-shell *::before, .onboarding-shell *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Base Reset ─────────────────────────────────────────── */
+:root {
+  --font-space-grotesk: 'Space Grotesk', Inter, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: #080808;
+  color: #ffffff;
+  font-family: var(--font-space-grotesk);
+}
+
+body {
+  background-color: #080808;
+  color: #ffffff;
+  font-family: var(--font-space-grotesk);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Custom Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ff5500;
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff7a30;
+}
+
+/* ─── Focus Styles ────────────────────────────────────────── */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid rgba(255, 85, 0, 0.5);
+  outline-offset: 2px;
+}
+
+/* ─── Text Selection ──────────────────────────────────────── */
+::selection {
+  background-color: #ff5500;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #ff5500;
+  color: #ffffff;
+}
+
+/* ─── Base Typography ─────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+
+/* ─── Utility Classes ─────────────────────────────────────── */
+@layer utilities {
+  .text-imprint-gradient {
+    background: linear-gradient(135deg, #ff5500 0%, #ff7a30 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-surface-card {
+    background-color: #111111;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+  }
+
+  .glow-orange {
+    box-shadow: 0 0 60px rgba(255, 85, 0, 0.25);
+  }
+
+  .transition-smooth {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* ── Frosted glass surfaces (nav + dashboard top bar) ──────────────────────
+   backdrop-filter needs a background translucent enough to see through, so
+   the fill sits at 0.60 rather than the near-solid 0.85 used before. The
+   saturate() is what keeps colour in whatever bleeds through — without it a
+   heavy blur over a dark page turns flat grey and stops reading as glass.
+   -webkit- prefix is still required by Safari.                            */
+.imprint-glass[data-glass="on"] {
+  background: rgba(8, 8, 8, 0.6);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+}
+
+.imprint-glass[data-glass="off"] {
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* Without backdrop-filter there is nothing to blur, and a 0.60 fill would
+   leave the bar's text sitting on raw page content. Fall back to the opaque
+   background these surfaces used previously. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .imprint-glass[data-glass="on"] {
+    background: rgba(8, 8, 8, 0.94);
+  }
+}
+
+/* Blur is expensive to composite and is a common motion-sickness trigger. */
+@media (prefers-reduced-motion: reduce) {
+  .imprint-glass[data-glass="on"] {
+    -webkit-backdrop-filter: saturate(160%);
+    backdrop-filter: saturate(160%);
+    background: rgba(8, 8, 8, 0.92);
+  }
+
+  /* The scroll-reveal sections are server-rendered at opacity 0 and animated
+     to 1 once framer-motion sees them enter the viewport. That is a fade on
+     nearly every block of the landing page, which is a lot of movement for
+     someone who has asked for less of it — and if the observer never fires
+     (JS blocked or failed), the copy stays invisible with no way back.
+
+     Forcing the resting state here means reduced-motion visitors get the page
+     fully composed and immediately readable. The `!important` is needed to beat
+     framer-motion's own inline style, which is why this cannot be a class. */
+  [style*="opacity:0"],
+  [style*="opacity: 0"] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ── Text on the brand orange ──────────────────────────────────────────────
+   White on #FF5500 measures 3.21:1 — below the 4.5:1 AA needs for the 14–16px
+   labels our buttons use, and they are not large enough to qualify for the 3:1
+   large-text allowance. Near-black on the same orange measures 6.18:1, which
+   fixes it without touching the brand colour itself. Buttons fade via
+   disabled:opacity-50 rather than swapping background, so the ratio holds in
+   the disabled state too.                                                   */
+.text-on-accent {
+  color: #0a0a0a;
+}
+
+/* ── Contained scroll panes ────────────────────────────────────────────────
+   Where a list genuinely cannot fit (35 professions, the AI-use questions) it
+   scrolls in its own pane. A bare native scrollbar floating in open space
+   reads as a rendering fault, so the pane is given a surface and a soft top
+   and bottom fade instead, and the scrollbar itself is slimmed right down.  */
+.scroll-pane {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 12px,
+    #000 calc(100% - 16px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 12px,
+    #000 calc(100% - 16px),
+    transparent 100%
+  );
+}
+
+.scroll-pane::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-pane::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-pane::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+}
+
+.scroll-pane::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+/* Prompt columns only need the contained treatment once side-by-side. */
+@media (min-width: 1024px) {
+  .lg\:scroll-pane {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+    -webkit-mask-image: linear-gradient(
+      to bottom, transparent 0, #000 12px, #000 calc(100% - 16px), transparent 100%);
+    mask-image: linear-gradient(
+      to bottom, transparent 0, #000 12px, #000 calc(100% - 16px), transparent 100%);
+  }
+  .lg\:scroll-pane::-webkit-scrollbar { width: 6px; }
+  .lg\:scroll-pane::-webkit-scrollbar-track { background: transparent; }
+  .lg\:scroll-pane::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+  }
+}
