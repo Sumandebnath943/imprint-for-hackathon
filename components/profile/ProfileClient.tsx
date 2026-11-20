@@ -166,18 +166,18 @@ export default function ProfileClient({
             <span style={{ fontSize: 300, fontWeight: 700, color: "#fff", opacity: 0.04, lineHeight: 0.8 }}>{(profile?.full_name || "U")[0].toUpperCase()}</span>
           </div>
 
-          <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             {/* LEFT: Avatar & Info */}
-            <div className="flex items-center gap-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-6 flex-1 min-w-0">
               <div
-                className="relative group w-[88px] h-[88px] rounded-full flex items-center justify-center shrink-0 overflow-hidden"
+                className="relative group w-[84px] h-[84px] rounded-full flex items-center justify-center shrink-0 overflow-hidden"
                 style={{ background: "rgba(255,85,0,0.20)", border: "3px solid rgba(255,85,0,0.40)", cursor: "pointer" }}
                 onClick={() => avatarInputRef.current?.click()}
               >
                 {avatarUrl ? (
                   <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
-                  <span className="font-bold" style={{ fontSize: 32, color: "#FF5500" }}>{initials}</span>
+                  <span className="font-bold" style={{ fontSize: 30, color: "#FF5500" }}>{initials}</span>
                 )}
                 <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   {uploadingAvatar
@@ -192,35 +192,36 @@ export default function ProfileClient({
                   onChange={handleAvatarChange}
                 />
               </div>
-              <div>
-                <h1 className="font-bold text-white mb-3" style={{ fontSize: 32, lineHeight: 1 }}>{profile?.full_name || "Anonymous User"}</h1>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="px-3 py-1 rounded-full text-[13px] font-medium" style={{ background: "rgba(255,85,0,0.10)", border: "1px solid rgba(255,85,0,0.25)", color: "#FF5500" }}>{profile?.profession || "Undefined"}</span>
-                  <span className="px-3 py-1 rounded-full text-[13px]" style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.60)" }}>{profile?.profession_cluster ? (CLUSTER_LABELS[profile.profession_cluster] ?? profile.profession_cluster) : "No Cluster"}</span>
+              <div className="min-w-0 space-y-3">
+                <h1 className="font-bold text-white tracking-tight" style={{ fontSize: 32, lineHeight: 1.1 }}>{profile?.full_name || "Anonymous User"}</h1>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="whitespace-nowrap px-3 py-1 rounded-full text-[13px] font-medium" style={{ background: "rgba(255,85,0,0.10)", border: "1px solid rgba(255,85,0,0.25)", color: "#FF5500" }}>{profile?.profession || "Undefined"}</span>
+                  <span className="whitespace-nowrap px-3 py-1 rounded-full text-[13px]" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.72)" }}>{profile?.profession_cluster ? (CLUSTER_LABELS[profile.profession_cluster] ?? profile.profession_cluster) : "No Cluster"}</span>
+                  <span className="whitespace-nowrap px-3 py-1 rounded-full text-[13px]" style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.62)" }}>{profile?.age_group ? (AGE_GROUP_LABELS[profile.age_group] ?? profile.age_group) : "Age not set"}</span>
                 </div>
-                <div className="flex items-center gap-2 text-[13px]" style={{ color: "rgba(255,255,255,0.62)" }}>
-                  <span>IMPRINT member since {memberSinceDate}</span>
-                  <span>·</span>
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[13px]" style={{ color: "rgba(255,255,255,0.62)" }}>
+                  <span className="whitespace-nowrap">IMPRINT member since {memberSinceDate}</span>
+                  <span aria-hidden="true">·</span>
                   {/* daysActive counts distinct days with activity, not elapsed
                       time. Beside "member since June" the old wording — "days
                       preserving identity" — read as membership length, so an
                       account 74 days old appeared to claim it was 6 days old. */}
-                  <span>{stats.daysActive ? `${stats.daysActive} ${stats.daysActive === 1 ? "day" : "days"} in Journal or Forge` : "No Journal or Forge activity yet"}</span>
+                  <span className="whitespace-nowrap">{stats.daysActive ? `${stats.daysActive} ${stats.daysActive === 1 ? "day" : "days"} in Journal or Forge` : "No Journal or Forge activity yet"}</span>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 px-5 py-4 text-center">
+            {/* RIGHT: Proficiency Summary & Links */}
+            <div className="w-full lg:w-[330px] shrink-0 rounded-2xl border border-white/10 bg-white/[0.02] px-6 py-5 text-center">
               <ProficiencySummary summary={proficiency} />
-              <Link href="/dashboard/drift" className="mt-2 inline-block text-sm text-[#ff9c77] underline">View progress</Link>
-            </div>
-            <div className="flex flex-col gap-3">
-              <Link href="/dashboard/profile/credential" className="text-sm text-[#ff9c77] underline">View credential</Link>
-              <span className="text-sm text-white/65">{profile?.age_group ? (AGE_GROUP_LABELS[profile.age_group] ?? profile.age_group) : "Age not set"}</span>
+              <div className="mt-4 flex items-center justify-center gap-5 border-t border-white/10 pt-3.5 text-sm">
+                <Link href="/dashboard/drift" className="whitespace-nowrap text-[#ff9c77] hover:text-[#ffad89] underline underline-offset-4">View progress</Link>
+                <Link href="/dashboard/profile/credential" className="whitespace-nowrap text-[#ff9c77] hover:text-[#ffad89] underline underline-offset-4">View credential</Link>
+              </div>
             </div>
           </div>
 
-          <div className="mt-10 pt-6 border-t border-white/5 flex flex-wrap justify-between gap-4">
+          <div className="mt-8 pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-y-5 gap-x-4">
             {[
               { val: stats.assessments, label: "Scored assessments" },
               { val: stats.calibrations, label: "Legacy Calibration sessions" },
@@ -229,9 +230,9 @@ export default function ProfileClient({
               { val: stats.vaultChallenges, label: "Vault Challenges" },
               { val: stats.journalEntries, label: "Journal Entries" }
             ].map((s, i) => (
-              <div key={i} className="text-center min-w-[100px]">
+              <div key={i} className="text-center">
                 <p className="font-bold text-white mb-1" style={{ fontSize: 20 }}>{s.val}</p>
-                <p className="text-[12px]" style={{ color: "rgba(255,255,255,0.66)" }}>{s.label}</p>
+                <p className="text-[12px] leading-snug" style={{ color: "rgba(255,255,255,0.66)" }}>{s.label}</p>
               </div>
             ))}
           </div>
@@ -291,7 +292,7 @@ export default function ProfileClient({
                     </div>
                     <div>
                       <label className="block text-[13px] font-medium text-white/60 mb-2">Age Group</label>
-                      <select value={formData.age_group} onChange={e => setFormData({ ...formData, age_group: e.target.value })} className="w-full text-[15px] outline-none text-white rounded-[10px]" style={{ background: "#1A1A1A", padding: "12px 16px", border: "1px solid transparent" }}>
+                      <select value={formData.age_group} onChange={e => setFormData({ ...formData, age_group: e.target.value })} className="w-full text-[15px] outline-none text-white rounded-[10px] bg-[#1A1A1A] py-3 pl-4 border border-transparent">
                         <option value="">Select age group</option>
                         {formData.age_group && !["adult_18_64", "senior_65_plus"].includes(formData.age_group) && (
                           <option value={formData.age_group} disabled>{AGE_GROUP_LABELS[formData.age_group]}</option>
@@ -305,8 +306,7 @@ export default function ProfileClient({
                       <select
                         value={formData.profession}
                         onChange={e => handleProfessionChange(e.target.value)}
-                        className="w-full text-[15px] outline-none text-white rounded-[10px]"
-                        style={{ background: "#1A1A1A", padding: "12px 16px", border: "1px solid transparent" }}
+                        className="w-full text-[15px] outline-none text-white rounded-[10px] bg-[#1A1A1A] py-3 pl-4 border border-transparent"
                       >
                         <option value="" disabled>Select profession</option>
                         {Object.entries(CLUSTER_LABELS).map(([cluster, clusterLabel]) => (

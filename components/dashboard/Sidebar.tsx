@@ -183,7 +183,9 @@ export default function Sidebar({ profile }: SidebarProps) {
       // hidden below md: MobileTabBar (md:hidden) is the navigation there, and
       // this rail was rendering alongside it — two nav systems at once, with
       // the rail eating 68px of a 375px viewport.
-      className="fixed top-0 left-0 h-full z-50 hidden md:flex flex-col overflow-hidden"
+      // z-[45] sits above TopBar (z-40) for tooltips while staying below
+      // full-screen overlays and modals (z-50 / z-[60]).
+      className="fixed top-0 left-0 h-full z-[45] hidden md:flex flex-col overflow-hidden"
       style={{
         background: "#0D0D0D",
         borderRight: "1px solid rgba(255,255,255,0.06)",

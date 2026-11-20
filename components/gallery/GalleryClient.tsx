@@ -145,8 +145,8 @@ export default function GalleryClient({ items: initial, userId }: GalleryClientP
           <div className="flex items-center gap-3">
             {/* Date picker */}
             <select value={dateRange} onChange={(e) => setDateRange(e.target.value as DateRange)}
-              className="text-xs rounded-xl px-3 py-1.5 outline-none"
-              style={{ background: "#1A1A1A", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.60)" }}>
+              className="text-xs rounded-xl pl-3 py-2 outline-none bg-[#1A1A1A] text-white/75"
+              style={{ border: "1px solid rgba(255,255,255,0.08)" }}>
               {DATE_RANGES.map(({ value, label }) => <option key={value} value={value}>{label}</option>)}
             </select>
             {/* View toggle */}

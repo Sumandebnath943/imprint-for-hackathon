@@ -42,14 +42,14 @@ export default function ScoreReview({ id, resolve = false, criteria = [] }: { id
       </label>
       {!resolve && <p className="text-white/65">This shares the assessment and your explanation with an authorized reviewer.</p>}
       {resolve && criteria.length > 0 && <label className="block">Criterion correction
-        <select value={task} onChange={(event) => setTask(event.target.value)} className="mt-1 block w-full rounded bg-[#222] p-2">
+        <select value={task} onChange={(event) => setTask(event.target.value)} className="mt-1 block w-full rounded-lg border border-white/15 bg-[#222] py-2 pl-3">
           <option value="">Resolve with an explanation</option>
           {criteria.map(({ taskId, skill }) => <option key={taskId} value={taskId}>{skill}</option>)}
         </select>
       </label>}
       {resolve && task && <div className="space-y-2" key={task}>
-        <label className="block">Revised rubric rating
-          <select name="rating" defaultValue={criteria.find(({ taskId }) => taskId === task)?.rubricRating ?? ""} required className="ml-2 rounded bg-[#222] p-2">
+        <label className="flex items-center gap-2.5"><span>Revised rubric rating</span>
+          <select name="rating" defaultValue={criteria.find(({ taskId }) => taskId === task)?.rubricRating ?? ""} required className="rounded-lg border border-white/15 bg-[#222] py-2 pl-3">
             <option value="" disabled>Choose a rating</option>
             {[0, 1, 2, 3, 4].map((rating) => <option value={rating} key={rating}>{rating}</option>)}
           </select>

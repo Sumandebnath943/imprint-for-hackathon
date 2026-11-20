@@ -274,14 +274,14 @@ export default function SignUpPage() {
                 )}
 
                 {/* Terms */}
-                <label className="mt-4 flex items-start gap-2 text-sm text-black/75">
-                  <input {...register("adultConfirmed")} type="checkbox" className="mt-1 accent-[#FF5500]"
+                <label className="mt-4 flex items-center justify-center gap-2.5 text-sm text-black/75 cursor-pointer select-none">
+                  <input {...register("adultConfirmed")} type="checkbox" className="h-4 w-4 shrink-0 accent-[#FF5500]"
                     aria-invalid={Boolean(errors.adultConfirmed)} aria-describedby={errors.adultConfirmed ? "adult-confirmation-error" : undefined} />
-                  I confirm that I’m 18 or older.
+                  <span>I confirm that I’m 18 or older.</span>
                 </label>
-                {errors.adultConfirmed && <p id="adult-confirmation-error" role="alert" className="mt-2 text-sm text-red-700">{errors.adultConfirmed.message}</p>}
+                {errors.adultConfirmed && <p id="adult-confirmation-error" role="alert" className="mt-2 text-center text-sm text-red-700">{errors.adultConfirmed.message}</p>}
                 <p
-                  className="text-center mt-4 mb-4"
+                  className="text-center text-balance mx-auto max-w-[300px] mt-4 mb-4"
                   style={{ fontSize: 12, color: "rgba(0,0,0,0.40)", lineHeight: 1.6 }}
                 >
                   By continuing, you agree to IMPRINT&apos;s{" "}

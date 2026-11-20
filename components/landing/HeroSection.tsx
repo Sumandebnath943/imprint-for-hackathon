@@ -98,7 +98,7 @@ export default function HeroSection() {
           muted
           playsInline
           poster="/hero-bg.webp"
-          className="hidden md:block absolute inset-0 z-0 w-full h-full object-cover opacity-90 mix-blend-luminosity scale-[1.15]"
+          className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 z-0 w-[134%] max-w-none h-full object-cover object-center opacity-90 mix-blend-luminosity"
         >
           <source src="/hero-bg.mp4" type="video/mp4" />
         </video>

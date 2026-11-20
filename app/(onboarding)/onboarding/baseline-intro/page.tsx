@@ -78,9 +78,9 @@ export default function BaselineIntroPage() {
           {role && !legacy && <section className="space-y-2 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
             <h2 className="font-medium text-white">{role.name} workspace</h2>
             {[5, 6].map((question) => <p key={question} className="text-sm text-white/75">Question {question} · {getOnboardingWorkspace(role.id, question)?.name}</p>)}
-            {role.id === "software-developer" && !answers.workspaceId && <div className="text-sm text-white/75">
-              <label htmlFor="workspace-difficulty">Level</label>
-              <select id="workspace-difficulty" value={difficulty} onChange={(event) => setDifficulty(event.target.value)} className="ml-3 rounded-lg border border-white/10 bg-[#171717] px-3 py-2">
+            {role.id === "software-developer" && !answers.workspaceId && <div className="flex items-center gap-3 pt-1 text-sm text-white/75">
+              <label htmlFor="workspace-difficulty" className="shrink-0">Level</label>
+              <select id="workspace-difficulty" value={difficulty} onChange={(event) => setDifficulty(event.target.value)} className="min-w-[148px] rounded-lg border border-white/15 bg-[#171717] py-2 pl-3.5 text-white">
                 {["Basic", "Intermediate", "Advanced"].map((level) => <option key={level}>{level}</option>)}
               </select>
             </div>}

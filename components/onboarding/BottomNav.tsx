@@ -26,23 +26,27 @@ export default function BottomNav({
 }: BottomNavProps) {
   return (
     <div
-      className={inline ? "mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4" : "fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between gap-3 px-5 py-4 md:px-12 md:py-5"}
-      style={{
-        background: "rgba(8,8,8,0.90)",
-        backdropFilter: "blur(20px)",
-        borderTop: "1px solid rgba(255,255,255,0.06)",
-        fontFamily: "Space Grotesk, sans-serif",
-      }}
+      className={inline ? "mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5" : "fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between gap-3 px-5 py-4 md:px-12 md:py-5"}
+      style={
+        inline
+          ? { fontFamily: "Space Grotesk, sans-serif" }
+          : {
+              background: "rgba(8,8,8,0.90)",
+              backdropFilter: "blur(20px)",
+              borderTop: "1px solid rgba(255,255,255,0.06)",
+              fontFamily: "Space Grotesk, sans-serif",
+            }
+      }
     >
       {/* Back */}
-      <div className="shrink-0 md:w-32">
+      <div className="shrink-0">
         {!hideBack && onBack && (
           <motion.button
             onClick={onBack}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
-            className="flex items-center gap-2 h-10 px-5 rounded-pill text-sm transition-all"
-            style={{ border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.60)" }}
+            className="flex items-center gap-2 h-11 px-5 rounded-pill text-sm transition-all"
+            style={{ border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.70)" }}
           >
             <ArrowLeft size={14} />
             Back
@@ -54,7 +58,7 @@ export default function BottomNav({
       <span hidden>Step {step} of {total}</span>
 
       {/* Continue */}
-      <div className="shrink-0 md:w-48 flex justify-end">
+      <div className="shrink-0 flex justify-end">
         <motion.button
           onClick={onContinue}
           disabled={continueDisabled}

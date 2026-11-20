@@ -17,9 +17,9 @@ export default async function ConfirmAgePage({ searchParams }: { searchParams: {
         <h1 className="text-3xl font-bold">Confirm your age</h1>
         <p>Imprint is available to people aged 18 and older.</p>
         <form action="/auth/confirm-age" method="post" className="space-y-4">
-          <label className="flex items-start gap-2">
-            <input name="adult" value="yes" type="checkbox" required className="mt-1 accent-[#FF5500]" />
-            I confirm that I’m 18 or older.
+          <label className="flex items-center gap-2.5 cursor-pointer select-none">
+            <input name="adult" value="yes" type="checkbox" required className="h-4 w-4 shrink-0 accent-[#FF5500]" />
+            <span>I confirm that I’m 18 or older.</span>
           </label>
           <button type="submit" className="w-full rounded-full bg-[#FF5500] px-5 py-3 font-medium text-black">Continue to Imprint</button>
           {searchParams.error === "save" && <p role="alert" className="text-sm text-red-700">We couldn’t save your confirmation. Please try again.</p>}

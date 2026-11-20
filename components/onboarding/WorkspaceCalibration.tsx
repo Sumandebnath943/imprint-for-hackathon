@@ -33,9 +33,9 @@ export default function WorkspaceCalibration({ roleId, roleName, initial, score 
     <h1 className="text-3xl font-semibold">Calibration for {roleName}</h1>
     {!work && <div className="space-y-3 rounded-2xl border border-white/10 p-4">
       <p className="text-sm text-white/75">{view.scoring ? "Complete two work samples for your current profession." : "Work samples are available to practise. Scoring is currently unavailable."}</p>
-      {roleId === "software-developer" && <div className="text-sm">
-        <label htmlFor="calibration-level">Level</label>
-        <select id="calibration-level" value={difficulty} onChange={(event) => setDifficulty(event.target.value)} className="ml-3 min-h-11 rounded-lg border border-white/10 bg-[#171717] px-3">
+      {roleId === "software-developer" && <div className="flex items-center gap-3 text-sm">
+        <label htmlFor="calibration-level" className="shrink-0 text-white/80">Level</label>
+        <select id="calibration-level" value={difficulty} onChange={(event) => setDifficulty(event.target.value)} className="min-h-11 min-w-[148px] rounded-lg border border-white/15 bg-[#171717] py-2 pl-3.5 text-white">
           {["Basic", "Intermediate", "Advanced"].map((level) => <option key={level}>{level}</option>)}
         </select>
       </div>}

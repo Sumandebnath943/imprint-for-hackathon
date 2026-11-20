@@ -77,11 +77,13 @@ export default function DashboardShell({ children, profile, driftScore }: Dashbo
         sidebarWidth={sidebarWidth}
       />
 
-      {/* Main scrollable area */}
+      {/* Main scrollable area — intentionally no z-index here so it does not
+          create a stacking context that traps child fixed overlays (CircleDetail,
+          CalibrationSession, SkillDrawer, modals) underneath Sidebar/TopBar. */}
       <motion.main
         animate={{ marginLeft: sidebarWidth }}
         transition={{ duration: 0.25, ease: "easeInOut" }}
-        className="relative z-10 min-h-screen"
+        className="relative min-h-screen"
         style={{ paddingTop: 64 }}
       >
         {/* Tighter gutters on mobile, and bottom clearance so the 60px fixed

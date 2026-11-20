@@ -63,17 +63,17 @@ export default function WorkQuestion({ record, question, answer, onChange, busy,
   return <fieldset disabled={busy || Boolean(record.assessment_id)} className="min-w-0 space-y-4">
     <legend className="mb-2 px-1 text-sm font-semibold text-[#ffad89]">{workspace?.name ?? "Your private response"}</legend>
     {!workspace && <p className="text-sm text-white/75">{reflections.mechanism}</p>}
-    {workspace?.artifact && <label className="flex items-start gap-2 text-sm text-white/80"><input type="checkbox"
+    {workspace?.artifact && <label className="flex items-start gap-2.5 text-sm leading-relaxed text-white/80 cursor-pointer"><input type="checkbox" className="mt-1 h-4 w-4 shrink-0 accent-[#FF5500]"
       checked={Boolean(answer.alternative)} onChange={(event) => onChange({ ...answer, alternative: event.target.checked, artifact: undefined })} />
-      Use a planning description instead of uploading an artifact.</label>}
+      <span>Use a planning description instead of uploading an artifact.</span></label>}
     {answer.alternative && <p className="text-sm text-white/75">Describe what you would create, where the evidence would appear, and what you would change. Planning feedback appears separately from artifact proficiency.</p>}
     {question === 1 && select("Opinion topic", BELIEF_TOPICS, 0)}
     {question === 3 ? <div className="space-y-3">
       {MEMORIES.map((topic, index) => <div key={topic}>
-        <label className="flex gap-3 text-sm">
-          <input type="checkbox" checked={answer.choices.includes(topic)} disabled={!answer.choices.includes(topic) && answer.choices.length >= 3}
+        <label className="flex items-start gap-3 text-sm leading-relaxed cursor-pointer">
+          <input type="checkbox" className="mt-1 h-4 w-4 shrink-0 accent-[#FF5500]" checked={answer.choices.includes(topic)} disabled={!answer.choices.includes(topic) && answer.choices.length >= 3}
             onChange={(event) => onChange({ ...answer, choices: event.target.checked ? [...answer.choices, topic] : answer.choices.filter((value) => value !== topic) })} />
-          {topic}
+          <span>{topic}</span>
         </label>
         {answer.choices.includes(topic) && editor(topic, index)}
       </div>)}
@@ -136,8 +136,8 @@ export default function WorkQuestion({ record, question, answer, onChange, busy,
         <button type="button" className={button} onClick={() => onChange({ ...answer, artifact: undefined })}>Remove attachment from this answer</button>
       </>}
     </div>}
-    <details className="rounded-xl border border-white/10 p-3">
-      <summary className="cursor-pointer text-sm font-semibold">{question === 4 || question === 7 ? "Private reflection check" : "How this answer is assessed"}</summary>
+    <details className="rounded-xl border border-white/10 bg-[#101011]/60 px-4 py-3.5">
+      <summary className="cursor-pointer text-sm font-semibold text-white/90">{question === 4 || question === 7 ? "Private reflection check" : "How this answer is assessed"}</summary>
       {criteria.map((skill) => <div key={skill} className="mt-3 text-sm text-white/80"><p className="font-semibold">{skill}</p>
         {question !== 4 && question !== 7 && !answer.alternative && <ul className="mt-1 space-y-1">{rubricAnchors(skill).map((line) => <li key={line}>{line}</li>)}</ul>}
       </div>)}

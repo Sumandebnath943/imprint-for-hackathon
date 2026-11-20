@@ -162,20 +162,26 @@ export function WorkspaceScoring({ initial, onChange, onBusy, onboarding = false
     }
   }
 
-  return <section aria-label="Score your work" className="space-y-3 rounded-2xl border border-white/10 p-4 text-left">
-    <h2 className="font-semibold">{workspace.assessment_id ? "Assessment saved" : "Evaluate your work sample"}</h2>
+  return <section aria-label="Score your work" className="space-y-4 rounded-2xl border border-white/10 bg-black/25 p-5 text-left">
+    <h2 className="text-base font-semibold text-white">{workspace.assessment_id ? "Assessment saved" : "Evaluate your work sample"}</h2>
     {typeof view.score === "number" && <p className="text-xl font-semibold text-[#ffad89]">{view.score}/100 · work-sample proficiency</p>}
     {!complete && <p className="text-sm text-white/70">Save every question before requesting an assessment.</p>}
     {complete && !workspace.assessment_id && !view.scoring && <p className="text-sm text-white/70">Scoring is currently unavailable. Your work is saved.</p>}
-    {complete && !workspace.assessment_id && view.scoring && <>
-      <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} />
-        I consent to sending my profession work samples to Gemini, with Groq as a fallback where supported.</label>
-      {onboarding && <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={share} onChange={(event) => setShare(event.target.checked)} />
-        Also evaluate the reasoning I chose to share in Questions 1–3. My emotional and personal reflections stay private.</label>}
-      <button type="button" disabled={!consent || busy} className="min-h-11 rounded-xl border border-[#ff955f] px-4 text-sm font-semibold text-[#ffad89] disabled:opacity-50" onClick={score}>
-        {busy ? "Evaluating your evidence…" : workspace.feedback ? "Retry assessment" : "Evaluate my work"}
-      </button>
-    </>}
+    {complete && !workspace.assessment_id && view.scoring && <div className="space-y-3.5">
+      <label className="flex items-start gap-3 text-sm leading-relaxed text-white/85 cursor-pointer">
+        <input type="checkbox" className="mt-1 h-4 w-4 shrink-0 accent-[#FF5500]" checked={consent} onChange={(event) => setConsent(event.target.checked)} />
+        <span>I consent to sending my profession work samples to Gemini, with Groq as a fallback where supported.</span>
+      </label>
+      {onboarding && <label className="flex items-start gap-3 text-sm leading-relaxed text-white/85 cursor-pointer">
+        <input type="checkbox" className="mt-1 h-4 w-4 shrink-0 accent-[#FF5500]" checked={share} onChange={(event) => setShare(event.target.checked)} />
+        <span>Also evaluate the reasoning I chose to share in Questions 1–3. My emotional and personal reflections stay private.</span>
+      </label>}
+      <div className="pt-1">
+        <button type="button" disabled={!consent || busy} className={`min-h-11 rounded-xl border border-[#ff955f] px-5 text-sm font-semibold text-[#ffad89] transition-colors hover:bg-[#ff955f]/10 disabled:opacity-50 ${onboarding ? "w-full" : ""}`} onClick={score}>
+          {busy ? "Evaluating your evidence…" : workspace.feedback ? "Retry assessment" : "Evaluate my work"}
+        </button>
+      </div>
+    </div>}
     {workspace.feedback && <ul className="space-y-3 text-sm text-white/80" aria-label="Criterion feedback">
       {workspace.feedback.map((item) => <li key={`${item.question}-${item.skill}`} className="border-t border-white/10 pt-2">
         <p className="font-semibold">Q{item.question} · {item.skill} · {item.rating === null ? "Insufficient evidence" : `${item.rating}/4`}</p>

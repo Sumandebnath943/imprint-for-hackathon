@@ -59,21 +59,23 @@ export default function CompletePage() {
 
   return (
     <StepLayout title="Finish onboarding" description="Save your setup to open your dashboard and start practicing." variant="centered">
-      <div className="mx-auto w-full max-w-md space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center">
-        <p className="text-white/80">{answers.profession} / {skillCount} skills selected</p>
+      <div className="mx-auto w-full max-w-lg space-y-5 rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 text-center">
+        <p className="text-sm font-medium text-white/80">{answers.profession} · {skillCount} {skillCount === 1 ? "skill" : "skills"} selected</p>
         {workspace?.workspace && <WorkspaceScoring initial={workspace} onBusy={setScoring} onboarding />}
         {error && <p role="alert" className="text-sm text-[#ffad89]">{error}</p>}
-        {needsBaseline ? (
-          <button className="min-h-11 rounded-xl bg-[#ff713d] px-5 font-semibold text-on-accent" onClick={() => {
-            if (!answers.workspaceId && !workspace?.workspace && !answers.baselineModules.length) setBaselineModules(buildModuleList(answers.professionCluster));
-            setStep(5);
-            router.push("/onboarding/baseline");
-          }}>Return to baseline questions</button>
-        ) : (
-          <button onClick={handleEnter} disabled={entering || scoring} className="min-h-11 rounded-xl bg-[#ff713d] px-5 font-semibold text-on-accent disabled:opacity-60">
-            {entering ? "Saving your setup..." : "Enter IMPRINT →"}
-          </button>
-        )}
+        <div className="pt-1">
+          {needsBaseline ? (
+            <button className="min-h-11 w-full sm:w-auto sm:min-w-[220px] rounded-xl bg-[#ff713d] px-6 font-semibold text-on-accent transition-opacity hover:opacity-95" onClick={() => {
+              if (!answers.workspaceId && !workspace?.workspace && !answers.baselineModules.length) setBaselineModules(buildModuleList(answers.professionCluster));
+              setStep(5);
+              router.push("/onboarding/baseline");
+            }}>Return to baseline questions</button>
+          ) : (
+            <button onClick={handleEnter} disabled={entering || scoring} className="min-h-11 w-full sm:w-auto sm:min-w-[220px] rounded-xl bg-[#ff713d] px-6 font-semibold text-on-accent transition-opacity hover:opacity-95 disabled:opacity-60">
+              {entering ? "Saving your setup..." : "Enter IMPRINT →"}
+            </button>
+          )}
+        </div>
       </div>
     </StepLayout>
   );

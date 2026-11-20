@@ -90,9 +90,9 @@ export default function PastWork({ roleId, criteria, samples, scoringEnabled }: 
             accept={isImage ? "image/jpeg,image/png,image/webp" : ".txt,.md,.csv,.js,.ts"} />
         </label>
         {!isImage && <label className="block">Or enter a work excerpt<textarea className={field} name="content" rows={5} maxLength={10000} /></label>}
-        <label className="flex gap-2">
-          <input type="checkbox" name="consent" value="yes" required />
-          I agree to independent provenance review and to sending qualifying work to Google Gemini for rubric scoring, with Groq as a fallback.
+        <label className="flex items-start gap-2.5 leading-relaxed cursor-pointer">
+          <input type="checkbox" name="consent" value="yes" required className="mt-1 h-4 w-4 shrink-0 accent-[#FF5500]" />
+          <span>I agree to independent provenance review and to sending qualifying work to Google Gemini for rubric scoring, with Groq as a fallback.</span>
         </label>
         <button type="submit" disabled={!hydrated || busy} className="min-h-10 rounded-full bg-[#ff713d] px-4 py-2 font-semibold text-black disabled:opacity-50">Submit sample</button>
       </form>}

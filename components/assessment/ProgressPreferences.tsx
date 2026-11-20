@@ -28,9 +28,9 @@ export default function ProgressPreferences({ reminderEmails, journalDays }: { r
   return <details className="mt-3 text-sm">
     <summary className="cursor-pointer text-[#ff9c77]">Task and journal preferences</summary>
     <form method="post" onSubmit={save} className="mt-3 space-y-3">
-      <label className="block"><input type="checkbox" name="email" defaultChecked={reminderEmails} /> Email me about scheduled, upcoming, and overdue tasks</label>
-      <label className="block">Journal days per week
-        <select name="days" defaultValue={journalDays} className="ml-2 rounded bg-[#242121] p-2">
+      <label className="flex items-start gap-2.5 cursor-pointer"><input type="checkbox" name="email" defaultChecked={reminderEmails} className="mt-1 h-4 w-4 shrink-0 accent-[#FF5500]" /><span>Email me about scheduled, upcoming, and overdue tasks</span></label>
+      <label className="flex items-center gap-2.5"><span>Journal days per week</span>
+        <select name="days" defaultValue={journalDays} className="rounded-lg border border-white/15 bg-[#242121] py-2 pl-3">
           <option value={0}>No goal</option>
           {Array.from({ length: 7 }, (_, index) => <option key={index} value={index + 1}>{index + 1}</option>)}
         </select>

@@ -60,12 +60,12 @@ export default function VaultFilterBar({ filter, sort, search, onFilter, onSort,
       </div>
 
       {/* Sort */}
-      <div className="relative flex items-center gap-2 rounded-lg px-3 h-9"
-        style={{ background: "#1A1A1A", border: "1px solid rgba(255,255,255,0.08)", minWidth: 180 }}>
+      <div className="relative flex items-center gap-2 rounded-lg pl-3 pr-1 h-9"
+        style={{ background: "#1A1A1A", border: "1px solid rgba(255,255,255,0.08)", minWidth: 205 }}>
         <ArrowUpDown size={14} style={{ color: "rgba(255,255,255,0.66)", flexShrink: 0 }} />
         <select value={sort} onChange={(e) => onSort(e.target.value as SortType)}
-          className="flex-1 outline-none text-sm bg-transparent appearance-none cursor-pointer"
-          style={{ color: "rgba(255,255,255,0.70)" }}>
+          className="flex-1 h-full outline-none text-sm bg-transparent cursor-pointer"
+          style={{ color: "rgba(255,255,255,0.75)" }}>
           {SORTS.map((s) => <option key={s.value} value={s.value} style={{ background: "#1A1A1A" }}>{s.label}</option>)}
         </select>
       </div>

@@ -9,6 +9,7 @@ import type { HumanCircle, CircleMember } from "@/components/circles/CirclesClie
 import { createClient } from "@/lib/supabase/client";
 import { getZoneColor, getZoneShortLabel } from "@/lib/drift/types";
 import { formatDate } from "@/lib/utils/format";
+import { CLUSTER_LABELS } from "@/lib/onboarding/modules";
 import CircleChallenges from "@/components/circles/CircleChallenges";
 
 interface Checkin {
@@ -201,19 +202,20 @@ export default function CircleDetail({ circle, userId, onClose }: CircleDetailPr
   };
 
   return (
-    <motion.div className="fixed inset-0 z-50 flex flex-col" style={{ background: "#080808" }}
+    <motion.div className="fixed inset-0 z-[60] flex flex-col" style={{ background: "#080808" }}
       initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }}>
       {/* Header */}
-      <div className="shrink-0 px-10 py-6" style={{ background: "#0D0D0D", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-        <button onClick={onClose} className="flex items-center gap-1.5 text-sm mb-4 transition-all hover:text-white" style={{ color: "rgba(255,255,255,0.66)" }}>
-          <ArrowLeft size={16} /> My Circles
-        </button>
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="font-bold text-white text-3xl mb-1">{circle.name}</h1>
-            <p className="text-sm" style={{ color: "rgba(255,255,255,0.66)" }}>{circle.cluster_focus} · {members.length} members</p>
-          </div>
-          <div className="flex gap-2">
+      <div className="shrink-0 px-5 py-5 md:px-10 md:py-6" style={{ background: "#0D0D0D", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        <div className="max-w-5xl mx-auto">
+          <button onClick={onClose} className="flex items-center gap-1.5 text-sm mb-4 transition-all hover:text-white" style={{ color: "rgba(255,255,255,0.66)" }}>
+            <ArrowLeft size={16} /> My Circles
+          </button>
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h1 className="font-bold text-white text-2xl md:text-3xl mb-1">{circle.name}</h1>
+              <p className="text-sm" style={{ color: "rgba(255,255,255,0.66)" }}>{CLUSTER_LABELS[circle.cluster_focus] ?? circle.cluster_focus} · {members.length} {members.length === 1 ? "member" : "members"}</p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
             <button onClick={() => navigator.clipboard.writeText(circle.invite_code)} className="rounded-full h-10 px-4 text-sm font-medium transition-all hover:bg-white/5" style={{ border: "1px solid rgba(255,255,255,0.20)", color: "rgba(255,255,255,0.70)" }}>
               Invite Code: {circle.invite_code}
             </button>
@@ -257,21 +259,24 @@ export default function CircleDetail({ circle, userId, onClose }: CircleDetailPr
                 </div>
               )}
             </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex px-10 shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-        {(["Feed", "Members", "Challenges", "Leaderboard"] as const).map(t => (
-          <button key={t} onClick={() => setActiveTab(t)} className="py-4 px-6 text-sm font-medium transition-all" style={{ color: activeTab === t ? "white" : "rgba(255,255,255,0.40)", borderBottom: activeTab === t ? "2px solid #FF5500" : "2px solid transparent" }}>
-            {t}
-          </button>
-        ))}
+      <div className="shrink-0 px-5 md:px-10 overflow-x-auto" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        <div className="flex max-w-5xl mx-auto">
+          {(["Feed", "Members", "Challenges", "Leaderboard"] as const).map(t => (
+            <button key={t} onClick={() => setActiveTab(t)} className="py-4 px-5 text-sm font-medium whitespace-nowrap transition-all" style={{ color: activeTab === t ? "white" : "rgba(255,255,255,0.45)", borderBottom: activeTab === t ? "2px solid #FF5500" : "2px solid transparent" }}>
+              {t}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-10 py-8">
+      <div className="flex-1 overflow-y-auto px-5 md:px-10 py-8">
         <div className="max-w-2xl mx-auto">
           {activeTab === "Feed" && (
             <div>

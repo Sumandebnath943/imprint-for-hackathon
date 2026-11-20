@@ -26,7 +26,7 @@ export default function MentorReviewForm({ id, profession }: { id: string; profe
     finally { setBusy(false); }
   }
   return <form method="post" onSubmit={submit} className="mt-4 space-y-3">
-    <label className="block">Decision <select className="rounded bg-[#252222] p-2" name="decision" defaultValue="" required>
+    <label className="flex items-center gap-2.5"><span>Decision</span> <select className="rounded-lg border border-white/15 bg-[#252222] py-2 pl-3" name="decision" defaultValue="" required>
       <option value="" disabled>Choose a decision</option><option value="approve">Approve</option><option value="decline">Decline</option>
     </select></label>
     <label className="block">Reason shared with the applicant

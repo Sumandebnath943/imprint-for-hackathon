@@ -6,6 +6,7 @@ import { Users, Info, X } from "lucide-react";
 import CircleDetail from "@/components/circles/CircleDetail";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { CLUSTER_LABELS } from "@/lib/onboarding/modules";
 
 export interface HumanCircle {
   id: string; name: string; description: string; cluster_focus: string;
@@ -113,12 +114,12 @@ export default function CirclesClient({ userId, circles, memberships, directory 
   };
 
   return (
-    <div className="relative" style={{ background: "#080808", minHeight: "100%", padding: "40px 48px 80px" }}>
+    <div className="relative py-2 md:py-4 pb-16" style={{ background: "#080808", minHeight: "100%" }}>
       <div className="absolute top-0 right-0 pointer-events-none select-none overflow-hidden"
         style={{ fontSize: 180, fontWeight: 700, color: "#fff", opacity: 0.025, lineHeight: 1, zIndex: 0 }}>CIRCLE</div>
 
       <div className="relative z-10 max-w-6xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex items-start justify-between mb-8">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-wrap items-start justify-between gap-4 mb-8">
           <div>
             <h1 className="font-bold text-white mb-1" style={{ fontSize: 32 }}>Human Circles</h1>
             <p style={{ fontSize: 15, color: "rgba(255,255,255,0.66)" }}>Small groups. Real accountability. No algorithms.</p>
@@ -163,7 +164,8 @@ export default function CirclesClient({ userId, circles, memberships, directory 
                 const memCount = memberships.filter((m) => m.circle_id === c.id).length || 1;
                 const isFull = memCount >= c.member_limit;
                 const isAdmin = memberships.find((m) => m.circle_id === c.id && m.user_id === userId)?.role === "admin";
-                const clusterColor = CLUSTERS.find(cl => cl.name === c.cluster_focus)?.color || "#FF5500";
+                const clusterLabel = CLUSTER_LABELS[c.cluster_focus] ?? c.cluster_focus;
+                const clusterColor = CLUSTERS.find(cl => cl.name === clusterLabel)?.color || "#FF5500";
 
                 return (
                   <motion.div key={c.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
@@ -171,15 +173,15 @@ export default function CirclesClient({ userId, circles, memberships, directory 
                     className="cursor-pointer group relative overflow-hidden"
                     style={{ background: "#111111", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 20, padding: 24, transition: "all 200ms ease" }}>
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ boxShadow: "0 0 30px rgba(255,85,0,0.05)", pointerEvents: "none" }} />
-                    <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-start justify-between gap-2 mb-3">
                       <h3 className="font-bold text-white text-lg">{c.name}</h3>
-                      <span className="text-xs rounded-full px-2 py-0.5" style={{ background: isFull ? "rgba(255,45,45,0.12)" : "rgba(0,217,126,0.10)", border: `1px solid ${isFull ? "rgba(255,45,45,0.25)" : "rgba(0,217,126,0.25)"}`, color: isFull ? "#FF2D2D" : "#00D97E" }}>
+                      <span className="shrink-0 whitespace-nowrap text-xs rounded-full px-2.5 py-0.5" style={{ background: isFull ? "rgba(255,45,45,0.12)" : "rgba(0,217,126,0.10)", border: `1px solid ${isFull ? "rgba(255,45,45,0.25)" : "rgba(0,217,126,0.25)"}`, color: isFull ? "#FF2D2D" : "#00D97E" }}>
                         {memCount}/{c.member_limit} members
                       </span>
                     </div>
                     <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 mb-3" style={{ background: "rgba(255,255,255,0.06)" }}>
                       <div className="w-2 h-2 rounded-full" style={{ background: clusterColor }} />
-                      <span style={{ fontSize: 12, color: "rgba(255,255,255,0.70)" }}>{c.cluster_focus}</span>
+                      <span style={{ fontSize: 12, color: "rgba(255,255,255,0.70)" }}>{clusterLabel}</span>
                     </div>
                     <p className="mb-4 line-clamp-2" style={{ fontSize: 14, color: "rgba(255,255,255,0.50)", lineHeight: 1.6 }}>{c.description || "No description provided."}</p>
                     <div className="flex items-center justify-between">
@@ -201,7 +203,7 @@ export default function CirclesClient({ userId, circles, memberships, directory 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {directory.map((circle) => <article key={circle.id} className="rounded-2xl border border-white/10 bg-[#111] p-5">
             <h3 className="font-semibold">{circle.name}</h3>
-            <p className="text-sm text-white/70">{circle.cluster_focus} · {circle.member_count}/{circle.member_limit} members</p>
+            <p className="text-sm text-white/70">{CLUSTER_LABELS[circle.cluster_focus] ?? circle.cluster_focus} · {circle.member_count}/{circle.member_limit} members</p>
             {circle.description && <p className="my-2 text-sm">{circle.description}</p>}
             <button onClick={() => void handleJoin(circle.id)} disabled={joining || circle.member_count >= circle.member_limit}
               className="mt-3 rounded-full bg-[#ff713d] px-4 py-2 text-sm font-semibold text-black disabled:opacity-50">

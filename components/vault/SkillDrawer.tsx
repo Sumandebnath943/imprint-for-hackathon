@@ -86,14 +86,14 @@ export default function SkillDrawer({ skill, decayedStrength, onClose, onGenerat
         <>
           {/* Backdrop */}
           <motion.div key="backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40" style={{ background: "rgba(0,0,0,0.50)" }}
+            className="fixed inset-0 z-50" style={{ background: "rgba(0,0,0,0.50)" }}
             onClick={onClose} />
 
           {/* Drawer */}
           <motion.div key="drawer"
             initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed right-0 top-0 bottom-0 z-50 flex flex-col overflow-y-auto"
+            className="fixed right-0 top-0 bottom-0 z-[51] flex flex-col overflow-y-auto"
             style={{ width: 400, background: "#0D0D0D", borderLeft: "1px solid rgba(255,255,255,0.08)" }}>
 
             {/* Header */}
