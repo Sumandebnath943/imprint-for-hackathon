@@ -33,19 +33,19 @@ import { getNoteMeta } from "@/lib/content/notes";
 import { CLUSTER_PAGES } from "@/lib/content/clusters";
 
 const STATIC_ROUTES: IndexableRoute[] = [
-  { path: "/", lastModified: "2026-09-05" },
-  { path: "/about", lastModified: "2026-09-05" },
-  { path: "/methodology", lastModified: "2026-09-05" },
-  { path: "/drift-score", lastModified: "2026-09-05" },
-  { path: "/research", lastModified: "2026-09-05" },
-  { path: "/faq", lastModified: "2026-09-05" },
-  { path: "/glossary", lastModified: "2026-09-05" },
-  { path: "/notes", lastModified: "2026-09-05" },
-  { path: "/contact", lastModified: "2026-09-05" },
-  { path: "/courses", lastModified: "2026-09-03" },
-  { path: "/signup", lastModified: "2026-09-03" },
-  { path: "/privacy", lastModified: "2026-09-05" },
-  { path: "/terms", lastModified: "2026-09-05" },
+  { path: "/", lastModified: "2026-11-13" },
+  { path: "/about", lastModified: "2026-11-13" },
+  { path: "/methodology", lastModified: "2026-11-13" },
+  { path: "/drift-score", lastModified: "2026-11-13" },
+  { path: "/research", lastModified: "2026-11-13" },
+  { path: "/faq", lastModified: "2026-11-13" },
+  { path: "/glossary", lastModified: "2026-11-13" },
+  { path: "/notes", lastModified: "2026-11-19" },
+  { path: "/contact", lastModified: "2026-11-13" },
+  { path: "/courses", lastModified: "2026-11-13" },
+  { path: "/signup", lastModified: "2026-11-13" },
+  { path: "/privacy", lastModified: "2026-11-20" },
+  { path: "/terms", lastModified: "2026-11-20" },
 ];
 
 /**
@@ -65,13 +65,13 @@ const NOTE_ROUTES: IndexableRoute[] = getNoteMeta().map((n) => ({
  */
 const GLOSSARY_ROUTES: IndexableRoute[] = GLOSSARY.map((t) => ({
   path: `/glossary/${t.slug}`,
-  lastModified: "2026-09-05",
+  lastModified: "2026-11-13",
 }));
 
 /** Audience pages, generated so a new cluster cannot go unlisted. */
 const CLUSTER_ROUTES: IndexableRoute[] = CLUSTER_PAGES.map((c) => ({
   path: `/for/${c.slug}`,
-  lastModified: "2026-09-05",
+  lastModified: "2026-11-13",
 }));
 
 export const INDEXABLE_ROUTES: IndexableRoute[] = [

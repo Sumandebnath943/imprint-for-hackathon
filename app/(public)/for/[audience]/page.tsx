@@ -87,7 +87,7 @@ export default function AudiencePage({ params }: { params: { audience: string } 
         title={c.h1}
         lede={c.lede}
         byline
-        updated="5 September 2026"
+        updated="13 November 2026"
         breadcrumbs={[{ name: c.title.replace("IMPRINT for ", ""), path: `/for/${c.slug}` }]}
       >
         <Section id="what-erodes" title="What delegation takes from this work">

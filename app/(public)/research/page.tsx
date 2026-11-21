@@ -65,7 +65,7 @@ export default function ResearchPage() {
         title="The research on AI and cognition"
         lede="What the studies actually found, what they do not establish, and where the evidence is thinner than the headlines. Every entry carries its own caveat, because a summary that drops the sample size is how a modest result becomes a certainty."
         byline
-        updated="5 September 2026"
+        updated="13 November 2026"
         breadcrumbs={[{ name: "Research", path: "/research" }]}
       >
         <Note>

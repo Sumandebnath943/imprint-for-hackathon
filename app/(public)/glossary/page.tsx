@@ -49,7 +49,7 @@ export default function GlossaryPage() {
         title="The vocabulary of cognitive drift"
         lede="Fifteen terms, defined. Seven come from the research literature on cognitive offloading and skill decay. Eight are measurements IMPRINT defines, and those are marked as such."
         byline
-        updated="5 September 2026"
+        updated="13 November 2026"
         breadcrumbs={[{ name: "Glossary", path: "/glossary" }]}
       >
         <Section id="from-the-literature" title="From the research literature">

@@ -59,7 +59,7 @@ export default function GlossaryTermPage({ params }: { params: { term: string } 
         title={t.term}
         lede={t.definition}
         byline
-        updated="5 September 2026"
+        updated="13 November 2026"
         breadcrumbs={[
           { name: "Glossary", path: "/glossary" },
           { name: t.term, path: `/glossary/${t.slug}` },

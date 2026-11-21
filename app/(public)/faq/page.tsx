@@ -28,7 +28,7 @@ export default function FaqPage() {
         title="Frequently asked questions"
         lede="What IMPRINT measures, how the number is produced, what the research actually establishes, and what happens to your data. The uncomfortable questions are answered here too."
         byline
-        updated="5 September 2026"
+        updated="13 November 2026"
         breadcrumbs={[{ name: "FAQ", path: "/faq" }]}
       >
         {FAQ_GROUPS.map((group) => (
