@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, type Variants } from "framer-motion";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, UserCheck } from "lucide-react";
 
 import { signInSchema, type SignInFormData } from "@/lib/validations/auth.schema";
 import { useAuth } from "@/hooks/useAuth";
@@ -54,6 +54,24 @@ const fieldVariants: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
 };
 
+const EVALUATOR_ACCOUNTS = [
+  {
+    label: "Captain Streak",
+    email: "captain.streak@example.com",
+    password: "ThisISadummyaccountNo#1",
+  },
+  {
+    label: "Major Drift",
+    email: "major.drift@example.com",
+    password: "ThisISadummyaccountNo#1",
+  },
+  {
+    label: "Just Unboxed",
+    email: "just.unboxed@example.com",
+    password: "ThisISadummyaccountNo#1",
+  },
+] as const;
+
 export default function SignInPage() {
   const hydrated = useHydrated();
   const { signIn, signInWithGoogle, loading: authLoading, error } = useAuth();
@@ -62,6 +80,7 @@ export default function SignInPage() {
   const [showForgot, setShowForgot] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [shakeKey, setShakeKey] = useState(0); // increment to re-trigger shake
+  const [selectedDummy, setSelectedDummy] = useState<string | null>(null);
 
   useEffect(() => {
     const issue = new URLSearchParams(location.search).get("error");
@@ -72,11 +91,19 @@ export default function SignInPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     mode: "onBlur",
   });
+
+  const prefillDummyAccount = (email: string, password: string) => {
+    setFormError(null);
+    setValue("email", email, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+    setValue("password", password, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+    setSelectedDummy(email);
+  };
 
   const isLoading = isSubmitting || authLoading;
 
@@ -114,32 +141,33 @@ export default function SignInPage() {
         onClose={() => setShowForgot(false)}
       />
 
-      {/* Auth card */}
-      <motion.div
-        key={shakeKey}
-        variants={cardVariants}
-        initial="hidden"
-        animate={
-          shakeKey > 0
-            ? {
-                x: [0, -8, 8, -4, 4, 0],
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                transition: {
-                  x: { duration: 0.4, ease: "easeOut" },
-                },
-              }
-            : "visible"
-        }
-        className="mx-auto w-full max-w-[440px]"
-        style={{
-          background: "#FFFFFF",
-          borderRadius: 28,
-          padding: "44px 48px",
-          boxShadow: "0 32px 80px rgba(0,0,0,0.12)",
-        }}
-      >
+      <div className="mx-auto flex w-full max-w-[840px] flex-col items-center justify-center gap-6 lg:flex-row lg:items-stretch">
+        {/* Auth card */}
+        <motion.div
+          key={shakeKey}
+          variants={cardVariants}
+          initial="hidden"
+          animate={
+            shakeKey > 0
+              ? {
+                  x: [0, -8, 8, -4, 4, 0],
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  transition: {
+                    x: { duration: 0.4, ease: "easeOut" },
+                  },
+                }
+              : "visible"
+          }
+          className="w-full max-w-[440px]"
+          style={{
+            background: "#FFFFFF",
+            borderRadius: 28,
+            padding: "44px 48px",
+            boxShadow: "0 32px 80px rgba(0,0,0,0.12)",
+          }}
+        >
         {/* Header */}
         <div className="mb-8">
           <p
@@ -269,7 +297,78 @@ export default function SignInPage() {
             Begin yours →
           </Link>
         </p>
-      </motion.div>
+        </motion.div>
+
+        {/* Evaluator dummy accounts panel */}
+        <motion.aside
+          variants={cardVariants}
+          initial="hidden"
+          animate="visible"
+          aria-label="Evaluator dummy accounts"
+          className="flex w-full max-w-[440px] flex-col justify-between lg:max-w-[360px]"
+          style={{
+            background: "rgba(255,255,255,0.88)",
+            borderRadius: 28,
+            padding: "36px 32px",
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "0 24px 60px rgba(0,0,0,0.08)",
+          }}
+        >
+          <div>
+            <div className="mb-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-widest" style={{ background: "rgba(255,85,0,0.10)", color: "#FF5500" }}>
+              <UserCheck size={13} />
+              For Evaluators
+            </div>
+            <h2 className="text-xl font-bold mb-2" style={{ color: "#1A1A1A", lineHeight: 1.2 }}>
+              Quick Demo Access
+            </h2>
+            <p className="text-xs leading-relaxed mb-5" style={{ color: "rgba(0,0,0,0.58)" }}>
+              These are dummy accounts provided for evaluators who want to explore the Imprint dashboard right away without going through the full sign-up and onboarding flow. Click any account to prefill the sign-in form.
+            </p>
+
+            <div className="flex flex-col gap-2.5">
+              {EVALUATOR_ACCOUNTS.map((account) => {
+                const isSelected = selectedDummy === account.email;
+                return (
+                  <button
+                    key={account.email}
+                    type="button"
+                    onClick={() => prefillDummyAccount(account.email, account.password)}
+                    className="w-full rounded-2xl px-4 py-3 text-left transition-all duration-150 hover:scale-[1.01]"
+                    style={{
+                      background: isSelected ? "rgba(255,85,0,0.07)" : "#FAF8F6",
+                      border: isSelected ? "1.5px solid #FF5500" : "1px solid rgba(0,0,0,0.08)",
+                    }}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-sm font-semibold" style={{ color: "#1A1A1A" }}>
+                        {account.label}
+                      </span>
+                      <span
+                        className="text-[11px] font-medium"
+                        style={{ color: isSelected ? "#FF5500" : "rgba(0,0,0,0.42)" }}
+                      >
+                        {isSelected ? "Prefilled ✓" : "Click to fill"}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 text-xs font-mono break-all" style={{ color: "rgba(0,0,0,0.65)" }}>
+                      {account.email}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div
+            className="mt-5 rounded-2xl px-3.5 py-2.5 text-[11px]"
+            style={{ background: "rgba(0,0,0,0.035)", color: "rgba(0,0,0,0.55)" }}
+          >
+            <span className="font-medium" style={{ color: "#1A1A1A" }}>Shared demo password:</span>{" "}
+            <code className="font-mono">ThisISadummyaccountNo#1</code>
+          </div>
+        </motion.aside>
+      </div>
     </AuthShell>
   );
 }
